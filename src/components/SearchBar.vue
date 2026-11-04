@@ -1,18 +1,16 @@
 <script setup>
-import { ref } from 'vue'
+defineProps({ modelValue: { type: String, required: true } })
+const emit = defineEmits(['update:modelValue', 'input'])
 
-const emit = defineEmits(['search'])
-const query = ref('')
-
-function submitSearch() {
-  emit('search', query.value)
+function onInput(event) {
+  emit('update:modelValue', event.target.value)
+  emit('input', event.target.value)
 }
 </script>
 
 <template>
-  <form class="search-field" @submit.prevent="submitSearch">
-    <label class="sr-only" for="character-search">Search characters by name</label>
-    <input id="character-search" v-model="query" type="search" placeholder="Try Morty or Summer…" />
-    <button class="search-submit" type="submit">Search</button>
-  </form>
+  <label class="search-field">
+    <span class="sr-only">Search characters by name</span>
+    <input :value="modelValue" type="search" placeholder="Try Morty or Summer…" @input="onInput" />
+  </label>
 </template>

@@ -9,6 +9,11 @@ const pages = ref(1)
 const loading = ref(false)
 const noResults = ref(false)
 
+// Questions:
+// 1. Typing “morty” makes 5 API requests, one for each keystroke.
+// 2. A slow response for keystroke 2 can arrive after keystroke 5 and overwrite the newer results.
+// 3. This request flooding wastes server/network resources and can make the UI show stale, flickering results.
+
 async function fetchCharacters(name = query.value, nextPage = 1) {
   query.value = name
   page.value = nextPage
@@ -41,7 +46,7 @@ onMounted(() => fetchCharacters('', 1))
       <div class="eyebrow"><span class="eyebrow-line"></span> THE MULTIVERSE, CATALOGUED</div>
       <h1>Find your<br /><span>character.</span></h1>
       <p class="intro">A field guide to the strange, familiar, and somewhere-in-between.<br />Search the known dimensions by name.</p>
-      <div class="search-row"><SearchBar @search="(name) => fetchCharacters(name, 1)" /></div>
+      <div class="search-row"><SearchBar v-model="query" @input="(name) => fetchCharacters(name, 1)" /></div>
       <div class="search-meta"><span class="status-text">{{ loading ? 'Scanning dimensions…' : noResults ? 'No characters found' : `${characters.length} characters on this page` }}</span></div>
     </section>
     <section class="results-section">
