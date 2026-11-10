@@ -71,13 +71,15 @@ h2 { margin: 0; font-size: 17px; letter-spacing: -.3px; }
 .location-icon { color: var(--green); font-size: 15px; }
 .card-arrow { display: none; }
 
-.pagination { display: flex; align-items: center; justify-content: space-between; height: 54px; margin: 0 0 36px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.pagination { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 54px; margin: 0 0 36px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
 .page-button { padding: 8px 10px; border: 1px solid var(--border); border-radius: 5px; background: #fff; color: #435148; font-size: 11px; cursor: pointer; }
 .page-button:hover:not(:disabled) { border-color: var(--green); color: var(--green); }
 .page-button:disabled { opacity: .45; cursor: not-allowed; }
-.page-count { display: flex; align-items: center; gap: 9px; color: #7a867e; font-size: 11px; }
-.page-count span { color: var(--green); font-weight: 700; }
-.page-count i { width: 16px; height: 1px; background: #cbd4cd; }
+.page-numbers { display: flex; align-items: center; justify-content: center; gap: 5px; }
+.page-number { min-width: 34px; padding: 8px; font-size: 12px; }
+.page-number.is-active { border-color: var(--green); background: var(--green); color: #fff; font-weight: 700; }
+.page-number.is-active:hover { color: #fff; }
+.page-ellipsis { min-width: 22px; color: #7a867e; text-align: center; }
 .empty-state { display: flex; min-height: 230px; flex-direction: column; align-items: center; justify-content: center; border-bottom: 1px solid var(--border); text-align: center; }
 .empty-symbol { display: grid; width: 34px; height: 34px; place-items: center; border: 1px solid #cbd6cd; border-radius: 50%; color: var(--green); font-size: 19px; }
 .empty-state h3 { margin: 12px 0 5px; font-size: 18px; }
@@ -111,5 +113,10 @@ h2 { margin: 0; font-size: 17px; letter-spacing: -.3px; }
   .card-info h3 { font-size: 15px; }
   .card-location { font-size: 10px; }
   .footer { font-size: 8px; }
+  .pagination { gap: 5px; }
+  .page-button { padding: 7px 6px; font-size: 10px; }
+  .page-numbers { gap: 3px; }
+  .page-number { min-width: 28px; padding: 7px 5px; }
+  .page-prev span, .page-next span { display: none; }
 }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }

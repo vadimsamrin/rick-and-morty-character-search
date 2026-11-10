@@ -1,6 +1,7 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import SearchBar from './components/SearchBar.vue'
+import PaginationBar from './components/PaginationBar.vue'
 
 const API = 'https://rickandmortyapi.com/api/character'
 const query = ref('')
@@ -11,6 +12,7 @@ const pages = ref(1)
 const loading = ref(false)
 const error = ref('')
 const hasSearched = ref(false)
+const characterList = ref(null)
 let controller
 
 const trimmedQuery = computed(() => query.value.trim())
@@ -87,7 +89,7 @@ function onSearchInput() {
 function changePage(nextPage) {
   if (nextPage < 1 || nextPage > pages.value || loading.value) return
   fetchCharacters(nextPage)
-  window.scrollTo({ top: 0, behavior: 'smooth' })
+  characterList.value?.scrollIntoView({ behavior: 'smooth', block: 'start' })
 }
 
 onMounted(() => fetchCharacters(1))
@@ -141,7 +143,7 @@ onBeforeUnmount(() => {
       <div v-else-if="error" class="empty-state"><span class="empty-symbol">!</span><h3>Signal lost</h3><p>{{ error }}</p></div>
       <div v-else-if="!loading && !characters.length" class="empty-state"><span class="empty-symbol">∅</span><h3>No characters found</h3><p>Nothing in the archive matches “{{ trimmedQuery }}”. Try another name.</p></div>
 
-      <div v-else class="character-grid" :class="{ 'is-refreshing': loading }">
+      <div v-else ref="characterList" class="character-grid" :class="{ 'is-refreshing': loading }">
         <article v-for="(character, index) in characters" :key="character.id" class="character-card" :style="{ '--card-index': index }">
           <div class="portrait-wrap">
             <img :src="character.image" :alt="character.name" loading="lazy" />
@@ -157,11 +159,12 @@ onBeforeUnmount(() => {
         </article>
       </div>
 
-      <nav v-if="pages > 1 && !loading && characters.length" class="pagination" aria-label="Pagination">
-        <button class="page-button page-prev" :disabled="page === 1" @click="changePage(page - 1)">← <span>PREVIOUS</span></button>
-        <div class="page-count"><span>{{ String(page).padStart(2, '0') }}</span><i></i>{{ String(pages).padStart(2, '0') }}</div>
-        <button class="page-button page-next" :disabled="page === pages" @click="changePage(page + 1)"><span>NEXT</span> →</button>
-      </nav>
+      <PaginationBar
+        v-if="pages > 1 && characters.length"
+        :current-page="page"
+        :total-pages="pages"
+        @page-change="changePage"
+      />
     </section>
 
     <footer class="footer"><span>DIMENSION INDEX <span class="footer-dot">·</span> A FIELD GUIDE TO THE MULTIVERSE</span><span>DATA VIA RICK AND MORTY API</span></footer>
